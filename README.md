@@ -4,7 +4,7 @@ An Action to run [_Cecil_](https://cecil.app) commands.
 
 This example :
 1. runs on pushes to the master branch
-2. will run `php cecil.phar --baseurl=https://example.com/`
+2. will run `php cecil.phar -v --baseurl=https://example.com/`
 
 ```
 workflow "Cecil Action" {
