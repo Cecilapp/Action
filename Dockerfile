@@ -7,10 +7,10 @@ LABEL "com.github.actions.color"="black"
 
 LABEL "repository"="https://github.com/Cecilapp/Cecil-Action"
 LABEL "homepage"="https://github.com/Cecilapp/Cecil-Action"
+LABEL "maintainer"="Arnaud Ligny <arnaud+github@ligny.fr>"
 
 RUN curl -SOL https://cecil.app/cecil.phar
 
 ADD entrypoint.sh /
 RUN chmod +x /entrypoint.sh
-
 ENTRYPOINT ["/entrypoint.sh"]
