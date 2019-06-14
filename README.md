@@ -7,21 +7,29 @@ This example :
 2. will run `php cecil.phar -v --baseurl=https://example.com/`
 
 ```
-workflow "Cecil build" {
+workflow "Cecil Action" {
   resolves = [
-    "Cecil Action",
+    "Build static site",
   ]
   on = "push"
 }
 
-action "Cecil Action" {
+action "Build static site" {
   uses = "Cecilapp/Cecil-Action@master"
-  needs = "Filter master branch"
+  needs = [
+    "Filter master branch",
+    "Composer Install",
+  ]
   args = "--baseurl=https://example.com/"
 }
 
 action "Filter master branch" {
   uses = "actions/bin/filter@master"
   args = "branch master"
+}
+
+action "Composer Install" {
+  uses = "pxgamer/composer-action@master"
+  args = "install"
 }
 ```
