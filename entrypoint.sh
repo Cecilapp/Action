@@ -7,4 +7,6 @@ curl -SOL https://cecil.app/cecil.phar
 
 sh -c "php cecil.phar build -v $*"
 
+touch _site/.nojekyll
+
 echo "### Completed the Cecil Action"
