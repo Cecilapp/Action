@@ -8,7 +8,7 @@ This example :
 3. run `php cecil.phar build -v --baseurl=https://example.com/`
 4. deploy to GitHub Pages
 
-```
+```hcl
 workflow "Cecil Action" {
   resolves = [
     "Deploy to GitHub Pages",
