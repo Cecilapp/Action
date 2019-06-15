@@ -5,13 +5,13 @@ A GitHub Action to build a static site with [_Cecil_](https://cecil.app) command
 The following example:
 1. runs on pushes to the master branch
 2. install theme(s)
-3. run `php cecil.phar build -v --baseurl=https://example.com/`
+3. run `php cecil.phar build -v --baseurl=https://narno.com/`
 4. deploy `_site` to GitHub Pages
 
 ```hcl
-workflow "Cecil Action" {
+workflow "Build and deploy" {
   resolves = [
-    "Deploy to GitHub Pages",
+    "Build with Cecil and deploy to GitHub Pages",
   ]
   on = "push"
 }
@@ -21,7 +21,7 @@ action "Filter master branch" {
   args = "branch master"
 }
 
-action "Composer Install" {
+action "Install theme(s)" {
   uses = "pxgamer/composer-action@master"
   args = "install"
 }
@@ -30,14 +30,20 @@ action "Build Cecil static site" {
   uses = "Cecilapp/Cecil-Action@master"
   needs = [
     "Filter master branch",
-    "Composer Install",
+    "Install theme(s)",
   ]
-  args = "--baseurl=https://example.com/"
+  args = "--baseurl=https://narno.com/"
 }
 
-action "Deploy to GitHub Pages" {
-  uses = "maxheld83/ghpages@v0.2.1"
+action "Write CNAME" {
+  uses = "actions/bin/sh@master"
   needs = "Build Cecil static site"
+  args = ["echo \"narno.com\" > _site/CNAME"]
+}
+
+action "Build with Cecil and deploy to GitHub Pages" {
+  uses = "maxheld83/ghpages@v0.2.1"
+  needs = "Write CNAME"
   env = {
     BUILD_DIR = "_site/"
   }
