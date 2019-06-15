@@ -9,18 +9,9 @@ This example :
 ```
 workflow "Cecil Action" {
   resolves = [
-    "Build static site",
+    "Deploy to GitHub Pages",
   ]
   on = "push"
-}
-
-action "Build static site" {
-  uses = "Cecilapp/Cecil-Action@master"
-  needs = [
-    "Filter master branch",
-    "Composer Install",
-  ]
-  args = "--baseurl=https://example.com/"
 }
 
 action "Filter master branch" {
@@ -31,5 +22,23 @@ action "Filter master branch" {
 action "Composer Install" {
   uses = "pxgamer/composer-action@master"
   args = "install"
+}
+
+action "Build Cecil static site" {
+  uses = "Cecilapp/Cecil-Action@master"
+  needs = [
+    "Filter master branch",
+    "Composer Install",
+  ]
+  args = "--baseurl=https://example.com/"
+}
+
+action "Deploy to GitHub Pages" {
+  uses = "maxheld83/ghpages@v0.2.1"
+  needs = "Build Cecil static site"
+  env = {
+    BUILD_DIR = "_site/"
+  }
+  secrets = ["GITHUB_TOKEN"]
 }
 ```
