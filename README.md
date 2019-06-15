@@ -1,12 +1,12 @@
 # GitHub Action for Cecil
 
-An Action to run [_Cecil_](https://cecil.app) commands.
+A GitHub Action to build a static site with [_Cecil_](https://cecil.app) commands.
 
-This example :
+The following example:
 1. runs on pushes to the master branch
 2. install theme(s)
 3. run `php cecil.phar build -v --baseurl=https://example.com/`
-4. deploy to GitHub Pages
+4. deploy `_site` to GitHub Pages
 
 ```hcl
 workflow "Cecil Action" {
