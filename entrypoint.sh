@@ -7,6 +7,4 @@ curl -SOL https://cecil.app/cecil.phar
 
 php cecil.phar build -v $*
 
-echo "Don't use Jekyll please!" > _site/.nojekyll
-
 echo "### Completed the Cecil Action"
