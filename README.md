@@ -11,7 +11,7 @@ The following example:
 ```hcl
 workflow "Build and deploy" {
   resolves = [
-    "Build static site and deploy to gh-pages",
+    "Deploy to GH Pages",
   ]
   on = "push"
 }
@@ -35,12 +35,13 @@ action "Build Cecil static site" {
   args = "--baseurl=https://narno.com/"
 }
 
-action "Build static site and deploy to gh-pages" {
+action "Deploy to GH Pages" {
   uses = "Cecilapp/GHPages-deploy-Action@master"
   needs = "Build Cecil static site"
   env = {
     BUILD_DIR = "_site/"
     CNAME = "narno.com"
+    NO_JEKYLL = "toutafé !"
   }
   secrets = ["GITHUB_TOKEN"]
 }
