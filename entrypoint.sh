@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
-echo "### Downloading Cecil"
-
 if [[ -z "$CECIL_VERSION" ]]; then
-	curl -SOL https://cecil.app/cecil.phar
+  echo "### Downloading Cecil"
+  curl -SOL https://cecil.app/cecil.phar
 else
+  echo "### Downloading Cecil $CECIL_VERSION"
   curl -SOL https://cecil.app/download/$CECIL_VERSION/cecil.phar
 fi
 
