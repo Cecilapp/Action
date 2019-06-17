@@ -41,8 +41,8 @@ action "Deploy to GH Pages" {
   env = {
     BUILD_DIR = "_site/"
     CNAME = "narno.com"
-    NO_JEKYLL = "toutafé !"
+    EMAIL = "arnaud+github@ligny.fr"
   }
-  secrets = ["GITHUB_TOKEN"]
+  secrets = ["GH_TOKEN"]
 }
 ```
