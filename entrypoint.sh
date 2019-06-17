@@ -1,10 +1,12 @@
 #!/bin/bash
 set -e
 
-echo "### Starting the Cecil Action"
+echo "### Downloading Cecil"
 
 curl -SOL https://cecil.app/cecil.phar
 
+echo "### Building Cecil static site"
+
 php cecil.phar build -v $*
 
-echo "### Completed the Cecil Action"
+echo "### Cecil Action done"
