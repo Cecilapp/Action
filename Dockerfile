@@ -11,7 +11,7 @@ LABEL "maintainer"="Arnaud Ligny <arnaud+github@ligny.fr>"
 
 # i18n
 #RUN apk update && apk add --no-cache gettext curl
-RUN apk add --no-cache gettext \
+RUN apk add --no-cache gettext-dev icu-dev \
 && docker-php-ext-install -j$(nproc) gettext \
 && docker-php-ext-install -j$(nproc) intl
 
