@@ -9,11 +9,9 @@ LABEL "repository"="https://github.com/Cecilapp/Cecil-Action"
 LABEL "homepage"="https://github.com/Cecilapp/Cecil-Action"
 LABEL "maintainer"="Arnaud Ligny <arnaud+github@ligny.fr>"
 
-# Setting up server
-RUN apt-get install -y libicu-dev gettext && \
-    docker-php-ext-configure intl && \
-    docker-php-ext-install intl
-RUN docker-php-ext-install gettext
+# i18n
+RUN apk update && \
+  apk add --no-cache gettext findutils
 
 ADD entrypoint.sh /
 RUN chmod +x /entrypoint.sh
