@@ -13,4 +13,5 @@ LABEL "maintainer"="Arnaud Ligny <arnaud+github@ligny.fr>"
 RUN apk update && apk add --no-cache gettext
 
 ADD entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
