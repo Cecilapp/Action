@@ -10,8 +10,7 @@ LABEL "homepage"="https://github.com/Cecilapp/Cecil-Action"
 LABEL "maintainer"="Arnaud Ligny <arnaud+github@ligny.fr>"
 
 # i18n
-RUN apk update && \
-  apk add --no-cache gettext findutils
+RUN apk update && apk add --no-cache gettext
 
 ADD entrypoint.sh /
 RUN chmod +x /entrypoint.sh
