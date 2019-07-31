@@ -11,6 +11,8 @@ LABEL "maintainer"="Arnaud Ligny <arnaud+github@ligny.fr>"
 
 # i18n
 #RUN apk update && apk add --no-cache gettext curl
+RUN docker-php-ext-install -j$(nproc) gettext \
+	&& docker-php-ext-install -j$(nproc) intl
 
 ADD entrypoint.sh /
 RUN chmod +x /entrypoint.sh
