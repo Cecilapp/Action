@@ -1,4 +1,4 @@
-FROM php:cli
+FROM alpine:3.9
 
 LABEL "com.github.actions.name"="Cecil Action"
 LABEL "com.github.actions.description"="Build a Cecil static site."
