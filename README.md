@@ -1,4 +1,4 @@
-# GitHub Action for Cecil
+# Build a Cecil static site
 
 A GitHub Action to build a static site with [_Cecil_](https://cecil.app) commands.
 
@@ -36,7 +36,7 @@ action "Build Cecil static site" {
 }
 
 action "Deploy to GH Pages" {
-  uses = "Cecilapp/GHPages-deploy-Action@master"
+  uses = "Cecilapp/GitHub-Pages-deploy@master"
   needs = "Build Cecil static site"
   env = {
     BUILD_DIR = "_site/"
