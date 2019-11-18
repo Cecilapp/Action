@@ -5,7 +5,7 @@ A GitHub Action to build a static site with [_Cecil_](https://cecil.app) command
 ## Usage
 
 ```yml
-- name: Build with Cecil
+- name: Build site with Cecil
   uses: Cecilapp/Cecil-Action@2.0.0
   env:
     CECIL_VERSION: '4.21.2'
