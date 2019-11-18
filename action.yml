@@ -1,0 +1,10 @@
+name: 'Cecil Action'
+description: 'Build a Cecil static site.'
+author: 'Arnaud Ligny'
+branding:
+  icon: 'package'
+  color: 'white'
+  
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
