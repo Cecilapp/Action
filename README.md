@@ -27,7 +27,7 @@ on:
     branches:
       - master
 jobs:
-  checkout-build-and-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout source
