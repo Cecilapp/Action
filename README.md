@@ -2,6 +2,17 @@
 
 A GitHub Action to build a static site with [_Cecil_](https://cecil.app) commands.
 
+## Usage
+
+```yml
+- name: Build with Cecil
+  uses: Cecilapp/Cecil-Action@2.0.0
+  env:
+    CECIL_VERSION: '4.21.2'
+```
+
+### Example
+
 The following example:
 1. runs on pushes to the master branch
 2. install theme(s)
@@ -19,18 +30,18 @@ jobs:
   checkout-build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@master
-    - name: Composer Install
-      uses: pxgamer/composer-action@master
+    - name: Checkout source
+      uses: actions/checkout@v1
+    - name: Install themes(s)
+      uses: pxgamer/composer-action@v2.1.0
       with:
         command: install
-    - name: Build with Cecil
-      uses: Cecilapp/Cecil-Action@V2
+    - name: Build site with Cecil
+      uses: Cecilapp/Cecil-Action@2.0.0
       env:
         CECIL_VERSION: '4.21.2'
-    - name: Deploy to GitHub Pages
-      uses: Cecilapp/GitHub-Pages-deploy@master
+    - name: Deploy site to GitHub Pages
+      uses: Cecilapp/GitHub-Pages-deploy@2.0.0
       env:
         EMAIL: arnaud@ligny.org               # must be a verified email
         GH_TOKEN: ${{ secrets.ACCESS_TOKEN }} # https://github.com/settings/tokens
