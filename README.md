@@ -1,14 +1,14 @@
 # Build a Cecil static site
 
-A GitHub Action to build a static site with [_Cecil_](https://cecil.app) commands.
+A GitHub Action to build a static site with [_Cecil_](https://cecil.app).
 
 ## Usage
 
-```yml
+```yaml
 - name: Build site with Cecil
   uses: Cecilapp/Cecil-Action@2.0.0
   env:
-    CECIL_VERSION: '4.21.2'
+    CECIL_VERSION: '5.9.2' # optional
 ```
 
 ### Example
@@ -16,11 +16,11 @@ A GitHub Action to build a static site with [_Cecil_](https://cecil.app) command
 The following example:
 1. runs on pushes to the master branch
 2. install theme(s)
-3. download Cecil 4.21.2
+3. download Cecil 5.9.2
 3. run `php cecil.phar build -v`
 4. deploy `_site` to GitHub Pages
 
-```yml
+```yaml
 name: Build and deploy
 on:
   push:
@@ -39,7 +39,7 @@ jobs:
     - name: Build site with Cecil
       uses: Cecilapp/Cecil-Action@2.0.0
       env:
-        CECIL_VERSION: '4.21.2'
+        CECIL_VERSION: '5.9.2'
     - name: Deploy site to GitHub Pages
       uses: Cecilapp/GitHub-Pages-deploy@2.0.0
       env:
