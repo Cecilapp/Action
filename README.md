@@ -8,7 +8,7 @@ A GitHub Action to build a static site with [_Cecil_](https://cecil.app).
 - name: Build site with Cecil
   uses: Cecilapp/Cecil-Action@2.0.0
   env:
-    CECIL_VERSION: '5.9.2' # optional
+    CECIL_VERSION: '5.14.4' # optional
 ```
 
 ### Example
@@ -16,7 +16,7 @@ A GitHub Action to build a static site with [_Cecil_](https://cecil.app).
 The following example:
 1. runs on pushes to the master branch
 2. install theme(s)
-3. download Cecil 5.9.2
+3. download Cecil 5.14.4
 3. run `php cecil.phar build -v`
 4. deploy `_site` to GitHub Pages
 
@@ -39,11 +39,11 @@ jobs:
     - name: Build site with Cecil
       uses: Cecilapp/Cecil-Action@2.0.0
       env:
-        CECIL_VERSION: '5.9.2'
+        CECIL_VERSION: '5.14.4'
     - name: Deploy site to GitHub Pages
-      uses: Cecilapp/GitHub-Pages-deploy@2.0.0
+      uses: Cecilapp/GitHub-Pages-deploy@2.0.1
       env:
-        EMAIL: arnaud@ligny.org               # must be a verified email
-        GH_TOKEN: ${{ secrets.ACCESS_TOKEN }} # https://github.com/settings/tokens
-        BUILD_DIR: _site/                     # "_site/" by default
+        EMAIL: arnaud@ligny.org
+        GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BUILD_DIR: _site
 ```
