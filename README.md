@@ -5,7 +5,7 @@ A GitHub Action to build a static site with [_Cecil_](https://cecil.app).
 ## Usage
 
 ```yaml
-- name: Build site with Cecil
+- name: Build site
   uses: Cecilapp/Cecil-Action@2.0.0
   env:
     CECIL_VERSION: '5.14.4' # optional
@@ -31,16 +31,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout source
-      uses: actions/checkout@v1
-    - name: Install themes(s)
-      uses: pxgamer/composer-action@v2.1.0
-      with:
-        command: install
-    - name: Build site with Cecil
+      uses: actions/checkout@v2
+    - name: Install theme(s)
+      run: composer install --prefer-dist --no-dev --no-progress --no-interaction
+    - name: Build site
       uses: Cecilapp/Cecil-Action@2.0.0
       env:
         CECIL_VERSION: '5.14.4'
-    - name: Deploy site to GitHub Pages
+    - name: Deploy site
       uses: Cecilapp/GitHub-Pages-deploy@2.0.1
       env:
         EMAIL: arnaud@ligny.org
