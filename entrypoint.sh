@@ -10,7 +10,5 @@ else
 fi
 
 echo "### Building Cecil static site"
-
 php cecil.phar build -v
-
 echo "### Cecil Action done"
