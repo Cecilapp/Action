@@ -1,6 +1,6 @@
 # Build a Cecil static site
 
-A GitHub Action to build a static site with [_Cecil_](https://cecil.app).
+> A GitHub Action to build a static site with [_Cecil_](https://cecil.app).
 
 ## Usage
 
