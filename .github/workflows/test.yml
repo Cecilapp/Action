@@ -16,5 +16,4 @@ jobs:
     - name: Build
       uses: ./
       with:
-        args: '-v'
-        intl: 'yes'
+        args: '-vv'

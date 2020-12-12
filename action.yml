@@ -5,9 +5,6 @@ inputs:
   args:
     description: 'Cecil arguments.'
     default: '-v'
-  intl:
-    description: 'Install Intl extensions.'
-    default: 'no'
 branding:
   icon: 'package'
   color: 'white'
