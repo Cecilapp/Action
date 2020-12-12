@@ -12,9 +12,10 @@
         CECIL_VERSION: '5.40.0' # optional
 ```
 
-### Example
+### Workflow example
 
 The following example:
+
 1. runs on pushes to the master branch
 2. install theme(s)
 3. download Cecil
