@@ -1,4 +1,4 @@
-FROM php:7.2-cli-alpine
+FROM php:7.4-cli-alpine
 
 # i18n
 RUN apk add --no-cache gettext-dev icu-dev \
