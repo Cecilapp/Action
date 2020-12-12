@@ -1,6 +1,10 @@
 FROM php:7.4-cli-alpine
 
-RUN if [[ -z "$INTL" ]] ; then echo Argument not provided ; else echo Argument is $INTL ; fi
+ARG INTL
+
+RUN echo "$INTL"
+
+#RUN if [[ -z "$INTL" ]] ; then echo Argument not provided ; else echo Argument is $INTL ; fi
 
 # i18n
 RUN apk add --no-cache gettext-dev icu-dev \
