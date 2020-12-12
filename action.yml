@@ -16,3 +16,5 @@ runs:
   image: 'Dockerfile'
   env:
     INTL: ${{ inputs.intl }}
+  args:
+    test: 'testage'

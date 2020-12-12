@@ -4,6 +4,10 @@ ARG INTL
 
 RUN echo ">>> $INTL"
 
+ARG test
+
+RUN echo ">>> $test"
+
 #RUN if [[ -z "$INTL" ]] ; then echo Argument not provided ; else echo Argument is $INTL ; fi
 
 # i18n
