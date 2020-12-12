@@ -2,7 +2,7 @@ name: 'Cecil Action'
 description: 'Build a Cecil static site.'
 author: 'Arnaud Ligny'
 inputs: 
-  arguments:
+  args:
     description: 'Cecil arguments.'
     default: '-v'
   intl:
@@ -14,5 +14,5 @@ branding:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.intl }}
+  env:
+    INTL: ${{ inputs.intl }}
