@@ -3,8 +3,11 @@ description: 'Build a Cecil static site.'
 author: 'Arnaud Ligny'
 inputs: 
   arguments:
-    description: 'Cecil CLI arguments.'
+    description: 'Cecil arguments.'
     default: '-v'
+  intl:
+    description: 'Install Intl extensions.'
+    default: 'no'
 branding:
   icon: 'package'
   color: 'white'
@@ -12,5 +15,4 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.arguments }}
-    - 'intl'
+    - ${{ inputs.intl }}
