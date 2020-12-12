@@ -1,8 +1,6 @@
 FROM php:7.4-cli-alpine
 
-ARG INTL
-
-RUN INTL=$1; echo $INTL
+RUN echo $INPUT_INTL
 
 #RUN if [[ -z "$INTL" ]] ; then echo Argument not provided ; else echo Argument is $INTL ; fi
 

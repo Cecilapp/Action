@@ -15,4 +15,4 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-  - INTL=${{ inputs.intl }}
+  - ${{ inputs.intl }}
