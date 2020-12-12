@@ -5,11 +5,15 @@ inputs:
   args:
     description: 'Cecil arguments.'
     default: '-v'
+  install_themes:
+    description: '"yes" to install theme(s).'
+    default: 'yes'
+  intl:
+    description: '"yes" to install INTL extensions.'
+    default: 'no'
 branding:
   icon: 'package'
   color: 'white'
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  env:
-    INTL: ${{ inputs.intl }}
