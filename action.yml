@@ -3,7 +3,7 @@ description: 'Build a Cecil static site.'
 author: 'Arnaud Ligny'
 inputs: 
   arguments:
-    description: 'Ceclin CLI arguments.'
+    description: 'Cecil CLI arguments.'
     default: '-v'
 branding:
   icon: 'package'
