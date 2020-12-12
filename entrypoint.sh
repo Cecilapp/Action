@@ -2,7 +2,7 @@
 set -e
 
 # Install INTL extensions
-if [[ $INPUT_INSTALL_THEMES -eq 'yes' ]]; then
+if [[ $INPUT_INSTALL_THEMES = 'yes' ]]; then
   apk update
   apk add --no-cache gettext-dev icu-dev
   docker-php-ext-install -j$(nproc) gettext
