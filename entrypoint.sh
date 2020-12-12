@@ -9,4 +9,4 @@ else
   curl -sSOL https://cecil.app/download/$CECIL_VERSION/cecil.phar
 fi
 
-php cecil.phar build $INPUT_ARGUMENTS
+php cecil.phar build $INPUT_ARGS
