@@ -2,8 +2,7 @@ FROM php:7.4-cli-alpine
 
 ARG INTL
 
-RUN echo ">>> $INTL"
-
+RUN echo ${INTL}
 
 #RUN if [[ -z "$INTL" ]] ; then echo Argument not provided ; else echo Argument is $INTL ; fi
 

@@ -14,7 +14,5 @@ branding:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  env:
-    INTL: ${{ inputs.intl }}
   args:
-    - 'INTL'
+  - INTL=${{ inputs.intl }}
