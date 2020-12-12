@@ -1,8 +1,8 @@
 FROM php:7.4-cli-alpine
 
 # Arguments
-ARG arg
-RUN if [[ -z "$arg" ]] ; then echo Argument not provided ; else echo Argument is $arg ; fi
+ARG args
+RUN if [[ -z "$args" ]] ; then echo Argument not provided ; else echo Argument is $args ; fi
 
 # i18n
 RUN apk add --no-cache gettext-dev icu-dev \
