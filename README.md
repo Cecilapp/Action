@@ -6,7 +6,7 @@
 
 ```yaml
 - name: Build site
-  uses: Cecilapp/Cecil-Action@2.0.0
+  uses: Cecilapp/Cecil-Action@2.2.0
   with:
     version: '5.41.0' # optional
     args: '-v'        # optional
@@ -40,7 +40,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build site
-      uses: Cecilapp/Cecil-Action@2.0.0
+      uses: Cecilapp/Cecil-Action@2.2.0
 
     - name: Deploy site
       uses: Cecilapp/GitHub-Pages-deploy@3.1.0
