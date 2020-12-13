@@ -6,8 +6,8 @@ if [[ $INPUT_INSTALL_THEMES = 'yes' ]]; then
   echo "Installing INTL extensions..."
   apk update > /dev/null
   apk add --no-cache gettext-dev icu-dev > /dev/null
-  docker-php-ext-install -j$(nproc) gettext
-  docker-php-ext-install -j$(nproc) intl
+  docker-php-ext-install -j$(nproc) gettext > /dev/null
+  docker-php-ext-install -j$(nproc) intl > /dev/null
 fi
 
 # Install theme(s)
