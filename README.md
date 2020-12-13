@@ -1,4 +1,4 @@
-# Cecil's Action
+# Cecil build Action
 
 > This Action builds a static site with [_Cecil_](https://cecil.app).
 
