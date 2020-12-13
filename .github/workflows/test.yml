@@ -16,6 +16,7 @@ jobs:
     - name: Build
       uses: ./
       with:
+        version: '5.41.0'
         args: '-vv'
         install_themes: 'yes'
         intl: 'yes'

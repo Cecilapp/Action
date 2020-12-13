@@ -7,8 +7,11 @@
 ```yaml
 - name: Build site
   uses: Cecilapp/Cecil-Action@2.0.0
-  env:
-    CECIL_VERSION: '5.40.0' # optional
+  with:
+    version: '5.41.0' # optional
+    args: '-v'        # optional
+    themes: 'yes'     # optional
+    intl: 'no'        # optional
 ```
 
 ### Workflow example
@@ -16,10 +19,11 @@
 The following example:
 
 1. runs on pushes to the `master` branch
-2. installs theme(s)
+2. checkout source
 3. downloads Cecil
-4. runs `php cecil.phar build -v`
-5. deploys `_site` to GitHub Pages
+4. installs theme(s)
+5. runs `php cecil.phar build -v`
+6. deploys `_site` to GitHub Pages
 
 ```yaml
 name: Build and deploy
@@ -34,9 +38,6 @@ jobs:
     steps:
     - name: Checkout source
       uses: actions/checkout@v2
-
-    - name: Install theme(s)
-      run: composer install --prefer-dist --no-dev --no-progress
 
     - name: Build site
       uses: Cecilapp/Cecil-Action@2.0.0

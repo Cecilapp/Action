@@ -2,6 +2,8 @@ name: 'Cecil Action'
 description: 'Build a Cecil static site.'
 author: 'Arnaud Ligny'
 inputs: 
+  version:
+    description: 'Cecil version.'
   args:
     description: 'Cecil arguments.'
     default: '-v'

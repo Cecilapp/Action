@@ -1,13 +1,13 @@
 #!/bin/sh
 set -e
 
-# Install INTL extensions
-if [[ $INPUT_INSTALL_THEMES = 'yes' ]]; then
-  echo "Installing INTL extensions..."
-  apk update > /dev/null
-  apk add --no-cache gettext-dev icu-dev > /dev/null
-  docker-php-ext-install -j$(nproc) gettext > /dev/null
-  docker-php-ext-install -j$(nproc) intl > /dev/null
+# Download Cecil
+if [[ -z "$INPUT_VERSION" ]]; then
+  echo "Downloading Cecil..."
+  curl -sSOL https://cecil.app/cecil.phar
+else
+  echo "Downloading Cecil $INPUT_VERSION..."
+  curl -sSOL https://cecil.app/download/$INPUT_VERSION/cecil.phar
 fi
 
 # Install theme(s)
@@ -18,13 +18,13 @@ if [[ -f "composer.json" && $INPUT_INSTALL_THEMES = 'yes' ]]; then
   composer install --prefer-dist --no-dev --no-progress
 fi
 
-# Download Cecil
-if [[ -z "$CECIL_VERSION" ]]; then
-  echo "Downloading Cecil..."
-  curl -sSOL https://cecil.app/cecil.phar
-else
-  echo "Downloading Cecil $CECIL_VERSION..."
-  curl -sSOL https://cecil.app/download/$CECIL_VERSION/cecil.phar
+# Install INTL extensions
+if [[ $INPUT_INSTALL_THEMES = 'yes' ]]; then
+  echo "Installing INTL extensions..."
+  apk update > /dev/null
+  apk add --no-cache gettext-dev icu-dev > /dev/null
+  docker-php-ext-install -j$(nproc) gettext > /dev/null
+  docker-php-ext-install -j$(nproc) intl > /dev/null
 fi
 
 # Run build
