@@ -3,8 +3,9 @@ set -e
 
 # Install INTL extensions
 if [[ $INPUT_INSTALL_THEMES = 'yes' ]]; then
-  apk update
-  apk add --no-cache gettext-dev icu-dev
+  echo "Installing INTL extensions..."
+  apk update > /dev/null
+  apk add --no-cache gettext-dev icu-dev > /dev/null
   docker-php-ext-install -j$(nproc) gettext
   docker-php-ext-install -j$(nproc) intl
 fi
