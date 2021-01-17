@@ -8,10 +8,10 @@
 - name: Build site
   uses: Cecilapp/Cecil-Action@v2
   with:
-    version: '5.41.0' # optional
-    args: '-v'        # optional
-    themes: 'yes'     # optional
-    intl: 'no'        # optional
+    version: '5.41.0'     # optional
+    args: '-v'            # optional
+    install_themes: 'yes' # optional
+    install_intl: 'no'    # optional
 ```
 
 ### Workflow example
