@@ -19,4 +19,4 @@ jobs:
         version: '5.41.0'
         args: '-vv'
         install_themes: 'yes'
-        intl: 'yes'
+        install_intl: 'yes'
