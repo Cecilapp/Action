@@ -19,7 +19,7 @@ if [[ -f "composer.json" && $INPUT_INSTALL_THEMES = 'yes' ]]; then
 fi
 
 # Install INTL extensions
-if [[ $INPUT_INSTALL_THEMES = 'yes' ]]; then
+if [[ $INPUT_INSTALL_INTL = 'yes' ]]; then
   echo "Installing INTL extensions..."
   apk update > /dev/null
   apk add --no-cache gettext-dev icu-dev > /dev/null
