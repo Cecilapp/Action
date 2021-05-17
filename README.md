@@ -52,6 +52,6 @@ jobs:
 
 ## License
 
-Cecil build Action is a free software distributed under the terms of the MIT license.
+_Cecil build Action_ is a free software distributed under the terms of the MIT license.
 
 © [Arnaud Ligny](https://arnaudligny.fr)
