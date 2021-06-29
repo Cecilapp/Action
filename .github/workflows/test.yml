@@ -18,6 +18,5 @@ jobs:
       uses: ./
       with:
         version: '5.55.0'
-        args: '-v'
+        args: '-vv'
         install_themes: 'yes'
-        install_intl: 'yes'
