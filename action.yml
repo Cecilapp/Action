@@ -23,11 +23,11 @@ runs:
   steps:
     - run: |
         # Download Cecil
-        echo "Download Cecil $INPUT_VERSION"
-        if [[ -z "$INPUT_VERSION" ]]; then
+        echo "Download Cecil ${{ inputs.version }}"
+        if [[ -z "${{ inputs.version }}" ]]; then
           curl -sSOL https://cecil.app/cecil.phar
         else
-          curl -sSOL https://cecil.app/download/$INPUT_VERSION/cecil.phar
+          curl -sSOL https://cecil.app/download/${{ inputs.version }}/cecil.phar
         fi
 
         # Install theme(s)
