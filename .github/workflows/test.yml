@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - master
+    - composite
 
 jobs:
   build:
