@@ -4,6 +4,8 @@ author: 'Arnaud Ligny'
 inputs: 
   version:
     description: 'Cecil version.'
+  config:
+    description: 'Cecil config.'
   args:
     description: 'Cecil arguments.'
     default: '-v'

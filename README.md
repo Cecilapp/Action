@@ -9,6 +9,7 @@
   uses: Cecilapp/Cecil-Action@v2
   with:
     version: '5.42.10'    # optional
+    config: 'config.yml'  # optional
     args: '-v'            # optional
     install_themes: 'yes' # optional
     install_intl: 'no'    # optional
