@@ -27,8 +27,8 @@ if [[ $INPUT_INSTALL_INTL = 'yes' ]]; then
 fi
 
 # Run build
-if [[ -z "$INPUT_CONFIG" ]]; then
+if [[ -z "${{ inputs.config }}" ]]; then
   php cecil.phar build $INPUT_ARGS
 else
-  php cecil.phar build $INPUT_ARGS --config=$INPUT_CONFIG
+  php cecil.phar build $INPUT_ARGS --config=${{ inputs.config }}
 fi
