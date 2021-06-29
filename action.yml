@@ -12,9 +12,6 @@ inputs:
   install_themes:
     description: '"yes" to install theme(s).'
     default: 'yes'
-  install_intl:
-    description: '"yes" to install INTL extensions.'
-    default: 'no'
 branding:
   icon: 'package'
   color: 'white'
