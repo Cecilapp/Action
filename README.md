@@ -6,12 +6,12 @@
 
 ```yaml
 - name: Build site
-  uses: Cecilapp/Cecil-Action@v2
+  uses: Cecilapp/Cecil-Action@v3
   with:
-    version: '5.42.10'    # optional
+    version: '5.55.0'     # optional
+    config: 'config.yml'  # optional
     args: '-v'            # optional
     install_themes: 'yes' # optional
-    install_intl: 'no'    # optional
 ```
 
 ### Workflow example
@@ -40,7 +40,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build site
-      uses: Cecilapp/Cecil-Action@v2
+      uses: Cecilapp/Cecil-Action@v3
 
     - name: Deploy site
       uses: Cecilapp/GitHub-Pages-deploy@v3
