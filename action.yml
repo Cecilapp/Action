@@ -48,6 +48,7 @@ runs:
         fi
 
         # Run build
+        echo "POUET: ${{ inputs.config }}"
         if [[ -z "${{ inputs.config }}" ]]; then
           php cecil.phar build $INPUT_ARGS
         else
