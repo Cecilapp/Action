@@ -31,7 +31,7 @@ runs:
         fi
 
         # Install theme(s)
-        if [[ -f "composer.json" && $INPUT_INSTALL_THEMES = 'yes' ]]; then
+        if [[ -f "composer.json" && ${{ inputs.install_themes }} = 'yes' ]]; then
           echo "Install theme(s)"
           #curl -sS https://getcomposer.org/installer | php
           #php composer.phar install --prefer-dist --no-dev --no-progress --no-interaction
@@ -39,7 +39,7 @@ runs:
         fi
 
         # Install INTL extensions
-        if [[ $INPUT_INSTALL_INTL = 'yes' ]]; then
+        if [[ ${{ inputs.install_intl }} = 'yes' ]]; then
           echo "Install INTL extensions"
           apk update > /dev/null
           apk add --no-cache gettext-dev icu-dev > /dev/null
@@ -50,8 +50,8 @@ runs:
         # Run build
         echo "POUET: ${{ inputs.config }}"
         if [[ -z "${{ inputs.config }}" ]]; then
-          php cecil.phar build $INPUT_ARGS
+          php cecil.phar build ${{ inputs.args }}
         else
-          php cecil.phar build $INPUT_ARGS --config=${{ inputs.config }}
+          php cecil.phar build ${{ inputs.args }} --config=${{ inputs.config }}
         fi
       shell: bash
