@@ -19,7 +19,7 @@ branding:
   icon: 'package'
   color: 'white'
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - run: ${{ github.action_path }}/build.sh
       shell: bash
