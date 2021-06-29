@@ -53,3 +53,4 @@ runs:
         else
           php cecil.phar build $INPUT_ARGS --config=${{ inputs.config }}
         fi
+      shell: bash
