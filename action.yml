@@ -5,7 +5,7 @@ inputs:
   version:
     description: 'Cecil version.'
   config:
-    description: 'Cecil config.'
+    description: 'Cecil configuration'
   args:
     description: 'Cecil arguments.'
     default: '-v'
@@ -19,19 +19,19 @@ runs:
   using: 'composite'
   steps:
     - run: |
-        # Download Cecil
-        echo "Download Cecil ${{ inputs.version }}"
+        # Downloading Cecil
+        echo "Downloading Cecil ${{ inputs.version }}"
         if [[ -z "${{ inputs.version }}" ]]; then
           curl -sSOL https://cecil.app/cecil.phar
         else
           curl -sSOL https://cecil.app/download/${{ inputs.version }}/cecil.phar
         fi
-        # Install theme(s)
+        # Installing theme(s)
         if [[ -f "composer.json" && ${{ inputs.install_themes }} = 'yes' ]]; then
-          echo "Install theme(s)"
+          echo "Installing theme(s)"
           composer install --prefer-dist --no-dev --no-progress --no-interaction
         fi
-        # Run build
+        # Running build
         if [[ -z "${{ inputs.config }}" ]]; then
           php cecil.phar build ${{ inputs.args }}
         else
