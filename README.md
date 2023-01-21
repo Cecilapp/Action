@@ -8,10 +8,10 @@ This Action builds a static site with [_Cecil_](https://cecil.app).
 - name: Build site
   uses: Cecilapp/Cecil-Action@v3
   with:
-    version: '5.55.0'     # optional
-    config: 'config.yml'  # optional
-    args: '-v'            # optional
-    install_themes: 'yes' # optional
+    version: '7.0.0'      # optional, default last version
+    config: 'config.yml'  # optional, default ''
+    args: '-v'            # optional, default '-v'
+    install_themes: 'yes' # optional, default 'yes'
 ```
 
 ### Workflow example
@@ -26,28 +26,44 @@ The following example:
 6. deploys `_site` to GitHub Pages
 
 ```yaml
-name: Build and deploy
+name: Build and deploy to GitHub Pages
 on:
   push:
     branches:
-    - master
+      - master
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout source
-      uses: actions/checkout@v2
+      - name: Checkout source
+        uses: actions/checkout@v3
 
-    - name: Build site
-      uses: Cecilapp/Cecil-Action@v3
+      - name: Build site
+        uses: Cecilapp/Cecil-Action@v3
 
-    - name: Deploy site
-      uses: Cecilapp/GitHub-Pages-deploy@v3
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        email: arnaud@ligny.org
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
 ```
 
 ## License
