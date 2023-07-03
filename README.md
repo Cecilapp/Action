@@ -7,30 +7,32 @@ This Action builds a static site with [_Cecil_](https://cecil.app).
 ```yaml
 - name: Build site
   uses: Cecilapp/Cecil-Action@v3
+  # optional
   with:
-    version: '7.0.0'      # optional, default last version
-    config: 'config.yml'  # optional, default ''
-    args: '-v'            # optional, default '-v'
-    install_themes: 'yes' # optional, default 'yes'
+    version: '7.0.0'      # default: latest version
+    config: 'config.yml'  # default: ''
+    args: '-v'            # default: '-v'
+    install_themes: 'yes' # default: 'yes'
 ```
 
 ### Workflow example
 
-The following example:
+The following workflow:
 
 1. runs on pushes to the `master` branch
 2. checkout source
-3. downloads Cecil
-4. installs theme(s)
-5. runs `php cecil.phar build -v`
-6. deploys `_site` to GitHub Pages
+3. setup PHP
+4. downloads Cecil
+5. installs theme(s)
+6. runs `php cecil.phar build -v`
+7. deploys `_site` to GitHub Pages
 
 ```yaml
 name: Build and deploy to GitHub Pages
 on:
   push:
-    branches:
-      - master
+    branches: [master] # or [main]
+  workflow_dispatch:   # run manually
 
 permissions:
   contents: read
@@ -47,6 +49,12 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: fileinfo, gd, mbstring
 
       - name: Build site
         uses: Cecilapp/Cecil-Action@v3
