@@ -13,6 +13,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
   
+      - name: Create a dummy page
+        run: |
+          mkdir -p pages
+          cat > pages/index.md <<EOL
+          Test
+          EOL
+
       - name: Build
         uses: ./
         with:
