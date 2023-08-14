@@ -3,19 +3,19 @@ name: test
 on:
   push:
     branches:
-    - master
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Build
-      uses: ./
-      with:
-        version: '5.55.0'
-        args: '-vv'
-        install_themes: 'yes'
+      - name: Checkout
+        uses: actions/checkout@v3
+  
+      - name: Build
+        uses: ./
+        with:
+          version: '7.44.2'
+          args: '-vv'
+          install_themes: 'yes'
