@@ -1,6 +1,6 @@
 # Cecil build Action
 
-This Action builds a static site with [_Cecil_](https://cecil.app).
+This GitHub Action builds a static site with [_Cecil_](https://cecil.app).
 
 ## Usage
 
@@ -9,7 +9,7 @@ This Action builds a static site with [_Cecil_](https://cecil.app).
   uses: Cecilapp/Cecil-Action@v3
   # optional
   with:
-    version: '7.0.0'      # default: latest version
+    version: '8.0.0'      # default: latest version
     config: 'config.yml'  # default: ''
     args: '-v'            # default: '-v'
     install_themes: 'yes' # default: 'yes'
@@ -31,8 +31,8 @@ The following workflow:
 name: Build and deploy to GitHub Pages
 on:
   push:
-    branches: [master] # or [main]
-  workflow_dispatch:   # run manually
+    branches: [main] # or [master]
+  workflow_dispatch: # run manually
 
 permissions:
   contents: read
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -60,7 +60,7 @@ jobs:
         uses: Cecilapp/Cecil-Action@v3
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v2
 
   deploy:
     needs: build
@@ -71,7 +71,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v3
 ```
 
 ## License
