@@ -2,8 +2,8 @@ name: test
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -20,9 +20,9 @@ jobs:
           Test
           EOL
 
-      - name: Build
+      - name: Run Action
         uses: ./
         with:
-          version: '7.44.2'
+          version: '8.0.0'
           args: '-vv'
           install_themes: 'yes'
