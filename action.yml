@@ -20,10 +20,11 @@ runs:
   steps:
     - run: |
         # Downloading Cecil
-        echo "Downloading Cecil ${{ inputs.version }}..."
         if [[ -z "${{ inputs.version }}" ]]; then
+          echo "Downloading Cecil..."
           curl -sSOL https://cecil.app/cecil.phar
         else
+          echo "Downloading Cecil ${{ inputs.version }}..."
           curl -sSOL https://cecil.app/download/${{ inputs.version }}/cecil.phar
         fi
         # Installing theme(s)
