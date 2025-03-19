@@ -3,14 +3,14 @@ description: 'Build a Cecil static site.'
 author: 'Arnaud Ligny'
 inputs: 
   version:
-    description: 'Cecil version.'
+    description: 'Cecil version (optional, last version by default).'
   config:
-    description: 'Cecil configuration'
+    description: 'Cecil configuration file (optional, `cecil.yml` by default).'
   args:
-    description: 'Cecil arguments.'
+    description: 'Cecil arguments (optionnal, `-v` by default).'
     default: '-v'
   install_themes:
-    description: '"yes" to install theme(s).'
+    description: 'Use "no" to do not install theme(s) (optionnal, `yes` by default).'
     default: 'yes'
 branding:
   icon: 'package'
@@ -20,7 +20,7 @@ runs:
   steps:
     - run: |
         # Downloading Cecil
-        echo "Downloading Cecil ${{ inputs.version }}"
+        echo "Downloading Cecil ${{ inputs.version }}..."
         if [[ -z "${{ inputs.version }}" ]]; then
           curl -sSOL https://cecil.app/cecil.phar
         else
@@ -28,8 +28,8 @@ runs:
         fi
         # Installing theme(s)
         if [[ -f "composer.json" && ${{ inputs.install_themes }} = 'yes' ]]; then
-          echo "Installing theme(s)"
-          composer install --prefer-dist --no-dev --no-progress --no-interaction
+          echo "Installing theme(s)..."
+          composer install --prefer-dist --no-dev --no-progress --no-interaction --quiet
         fi
         # Running build
         if [[ -z "${{ inputs.config }}" ]]; then
