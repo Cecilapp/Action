@@ -21,4 +21,7 @@ jobs:
       - name: Run Action
         uses: ./
         with:
+          version: '8.66.0'
+          config: 'config.yml'
           args: '-vv'
+          install_themes: 'yes'
