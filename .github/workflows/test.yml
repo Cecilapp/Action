@@ -7,22 +7,18 @@ on:
 
 jobs:
   build:
+    name: Build static site
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-  
       - name: Create a dummy page
         run: |
           mkdir -p pages
           cat > pages/index.md <<EOL
           Test
           EOL
-
       - name: Run Action
         uses: ./
         with:
-          version: '8.0.0'
           args: '-vv'
-          install_themes: 'yes'
