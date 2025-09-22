@@ -2,6 +2,8 @@
 
 This GitHub Action builds a static site with [_Cecil_](https://cecil.app).
 
+[![test](https://github.com/Cecilapp/Action/actions/workflows/test.yml/badge.svg)](https://github.com/Cecilapp/Action/actions/workflows/test.yml)
+
 ## Usage
 
 ```yaml
