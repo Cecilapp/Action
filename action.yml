@@ -38,8 +38,8 @@ runs:
         else
           php cecil.phar build ${{ inputs.args }} --config=${{ inputs.config }}
         fi
-        if [ $? == 0 ]
-        then
+        # Summary
+        if [ $? == 0 ]; then
           echo "Site built with Cecil ${{ inputs.version }}" >> $GITHUB_STEP_SUMMARY
         fi
       shell: bash
