@@ -50,13 +50,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
-          extensions: fileinfo, gd, mbstring
+          php-version: pre-installed
+          extensions: mbstring, fileinfo, gd, imagick, intl, gettext, :redis
 
       - name: Setup Pages
         id: pages
@@ -68,7 +68,7 @@ jobs:
           args: '-v --baseurl="${{ steps.pages.outputs.base_url }}/"'
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
 
   deploy:
     needs: build
