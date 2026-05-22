@@ -25,7 +25,9 @@ runs:
       shell: bash
       run: |
         version="${{ inputs.version }}"
-        if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([\-+].*)?$ ]]; then
+        if [[ -z "$version" ]]; then
+          echo "No Cecil version provided; using latest release."
+        elif [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([\-+].*)?$ ]]; then
           echo "Invalid Cecil version: '$version' (expected e.g. 8.76.3)" >&2
           exit 1
         fi
