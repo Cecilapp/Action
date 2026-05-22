@@ -13,7 +13,7 @@ This GitHub Action builds a [_Cecil_](https://cecil.app) site and uploads a GitH
   with:
     version: 8.0.0                   # default: latest version
     options: -v --config=config.yml  # default: "-v" (verbose)
-    install_themes: yes              # default: "yes"
+    install_themes: "yes"            # default: "yes"
 ```
 
 ### Workflow example
