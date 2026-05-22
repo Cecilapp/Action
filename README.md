@@ -1,6 +1,6 @@
 # Cecil build Action
 
-This GitHub Action builds a static site with [_Cecil_](https://cecil.app).
+This GitHub Action build a [_Cecil_](https://cecil.app) site and upload a GitHub Pages artifact.
 
 [![test](https://github.com/Cecilapp/Action/actions/workflows/test.yml/badge.svg)](https://github.com/Cecilapp/Action/actions/workflows/test.yml)
 
@@ -8,13 +8,13 @@ This GitHub Action builds a static site with [_Cecil_](https://cecil.app).
 
 ```yaml
 - name: Build site
-  uses: Cecilapp/Cecil-Action@v3
+  uses: Cecilapp/Cecil-Action@v4
   # optional
   with:
-    version: '8.0.0'      # default: latest version
-    config: 'config.yml'  # default: ''
-    args: '-v'            # default: '-v'
-    install_themes: 'yes' # default: 'yes'
+    version: 8.0.0       # default: latest version
+    config: config.yml   # default: empty
+    options: -v          # default: "-v" (verbose)
+    install_themes: yes  # default: "yes"
 ```
 
 ### Workflow example
@@ -27,7 +27,8 @@ The following workflow:
 4. downloads Cecil
 5. installs theme(s)
 6. runs `php cecil.phar build -v`
-7. deploys `_site` to GitHub Pages
+7. upload artifact
+8. deploys `_site` to GitHub Pages
 
 ```yaml
 name: Build and deploy to GitHub Pages
@@ -60,15 +61,15 @@ jobs:
 
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Build site
-        uses: Cecilapp/Cecil-Action@v3
+        uses: Cecilapp/Cecil-Action@v4
         with:
-          args: '-v --baseurl="${{ steps.pages.outputs.base_url }}/"'
+          options: '-v --baseurl="${{ steps.pages.outputs.base_url }}/"'
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
 
   deploy:
     needs: build
@@ -79,7 +80,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 ```
 
 ## License

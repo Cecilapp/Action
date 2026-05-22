@@ -1,45 +1,76 @@
-name: 'Cecil Action'
-description: 'Build a Cecil static site.'
-author: 'Arnaud Ligny'
+name: "Cecil Action"
+description: "Build a Cecil static site."
+author: "Arnaud Ligny"
 inputs: 
   version:
-    description: 'Cecil version (optional, last version by default).'
+    description: "Cecil version (optional, last version by default)."
   config:
-    description: 'Cecil configuration file (optional, `cecil.yml` by default).'
-  args:
-    description: 'Cecil arguments (optionnal, `-v` by default).'
-    default: '-v'
+    description: "Cecil configuration file (optional, empty by default)."
+  options:
+    description: "Cecil options (optional, `-v` by default)."
+    default: -v
   install_themes:
-    description: 'Use "no" to do not install theme(s) (optionnal, `yes` by default).'
-    default: 'yes'
+    description: "Use `no` to do not install theme(s) (optional, `yes` by default)."
+    default: yes
 branding:
-  icon: 'package'
-  color: 'white'
+  icon: package
+  color: white
 runs:
-  using: 'composite'
+  using: composite
   steps:
-    - run: |
-        # Downloading Cecil
+    - name: Validate Cecil version
+      shell: bash
+      run: |
+        version="${{ inputs.version }}"
+        if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([\-+].*)?$ ]]; then
+          echo "Invalid Cecil version: '$version' (expected e.g. 8.76.3)" >&2
+          exit 1
+        fi
+    - name: Validate config file
+      shell: bash
+      run: |
+        if [[ -n "${{ inputs.config }}" && ! -f "${{ inputs.config }}" ]]; then
+          echo "Config file '${{ inputs.config }}' not found." >&2
+          exit 1
+        fi
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: pre-installed
+        extensions: mbstring, fileinfo, gd, imagick, intl, gettext, :redis
+    - name: Downloading Cecil
+      shell: bash
+      run: |
         if [[ -z "${{ inputs.version }}" ]]; then
-          echo "Downloading Cecil..."
+          echo "Downloading latest Cecil..."
           curl -sSOL https://cecil.app/cecil.phar
         else
           echo "Downloading Cecil ${{ inputs.version }}..."
           curl -sSOL https://cecil.app/download/${{ inputs.version }}/cecil.phar
         fi
-        # Installing theme(s)
+    - name: Installing theme(s)
+      shell: bash
+      run: |
         if [[ -f "composer.json" && ${{ inputs.install_themes }} = 'yes' ]]; then
           echo "Installing theme(s)..."
           composer install --prefer-dist --no-dev --no-progress --no-interaction --quiet
         fi
-        # Running build
+    - name: Setup Pages
+      id: pages
+      uses: actions/configure-pages@v6
+    - name: Building site with Cecil
+      shell: bash
+      run: |
         if [[ -z "${{ inputs.config }}" ]]; then
-          php cecil.phar build ${{ inputs.args }}
+          php cecil.phar build ${{ inputs.options }}
         else
-          php cecil.phar build ${{ inputs.args }} --config=${{ inputs.config }}
+          php cecil.phar build ${{ inputs.options }} --config=${{ inputs.config }} --baseurl="${{ steps.pages.outputs.base_url }}/"
         fi
         # Summary
         if [ $? == 0 ]; then
           echo "Site built with Cecil ${{ inputs.version }}" >> $GITHUB_STEP_SUMMARY
         fi
-      shell: bash
+    - name: Upload GitHub Pages artifact
+      uses: actions/upload-pages-artifact@v5
+      with:
+        path: ${{ inputs.working_directory }}/${{ inputs.output_dir }}
