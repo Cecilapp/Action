@@ -1,6 +1,6 @@
 # Cecil build Action
 
-This GitHub Action build a [_Cecil_](https://cecil.app) site and upload a GitHub Pages artifact.
+This GitHub Action builds a [_Cecil_](https://cecil.app) site and uploads a GitHub Pages artifact.
 
 [![test](https://github.com/Cecilapp/Action/actions/workflows/test.yml/badge.svg)](https://github.com/Cecilapp/Action/actions/workflows/test.yml)
 
