@@ -27,6 +27,5 @@ jobs:
         uses: ./
         with:
           version: '8.93.1'
-          config: 'config.yml'
-          args: '-vv'
+          options: '-vv'
           install_themes: 'yes'

@@ -12,8 +12,7 @@ This GitHub Action build a [_Cecil_](https://cecil.app) site and upload a GitHub
   # optional
   with:
     version: 8.0.0       # default: latest version
-    config: config.yml   # default: empty
-    options: -v          # default: "-v" (verbose)
+    options: -v --config=config.yml # default: "-v" (verbose)
     install_themes: yes  # default: "yes"
 ```
 
@@ -21,12 +20,12 @@ This GitHub Action build a [_Cecil_](https://cecil.app) site and upload a GitHub
 
 The following workflow:
 
-1. runs on pushes to the `master` branch
+1. runs on pushes to the `main` and `master` branches
 2. checkout source
 3. setup PHP
 4. downloads Cecil
 5. installs theme(s)
-6. runs `php cecil.phar build -v`
+6. runs Cecil to build the site
 7. upload artifact
 8. deploys `_site` to GitHub Pages
 
@@ -34,8 +33,8 @@ The following workflow:
 name: Build and deploy to GitHub Pages
 on:
   push:
-    branches: [main] # or [master]
-  workflow_dispatch: # run manually
+    branches: [main, master]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -52,24 +51,8 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v6
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: pre-installed
-          extensions: mbstring, fileinfo, gd, imagick, intl, gettext, :redis
-
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v6
-
       - name: Build site
         uses: Cecilapp/Cecil-Action@v4
-        with:
-          options: '-v --baseurl="${{ steps.pages.outputs.base_url }}/"'
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
 
   deploy:
     needs: build

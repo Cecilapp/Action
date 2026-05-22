@@ -4,8 +4,6 @@ author: "Arnaud Ligny"
 inputs: 
   version:
     description: "Cecil version (optional, last version by default)."
-  config:
-    description: "Cecil configuration file (optional, empty by default)."
   options:
     description: "Cecil options (optional, `-v` by default)."
     default: -v
@@ -24,13 +22,6 @@ runs:
         version="${{ inputs.version }}"
         if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([\-+].*)?$ ]]; then
           echo "Invalid Cecil version: '$version' (expected e.g. 8.76.3)" >&2
-          exit 1
-        fi
-    - name: Validate config file
-      shell: bash
-      run: |
-        if [[ -n "${{ inputs.config }}" && ! -f "${{ inputs.config }}" ]]; then
-          echo "Config file '${{ inputs.config }}' not found." >&2
           exit 1
         fi
     - name: Setup PHP
@@ -55,17 +46,13 @@ runs:
           echo "Installing theme(s)..."
           composer install --prefer-dist --no-dev --no-progress --no-interaction --quiet
         fi
-    - name: Setup Pages
+    - name: Setup GitHub Pages
       id: pages
       uses: actions/configure-pages@v6
     - name: Building site with Cecil
       shell: bash
       run: |
-        if [[ -z "${{ inputs.config }}" ]]; then
-          php cecil.phar build ${{ inputs.options }}
-        else
-          php cecil.phar build ${{ inputs.options }} --config=${{ inputs.config }} --baseurl="${{ steps.pages.outputs.base_url }}/"
-        fi
+        php cecil.phar build ${{ inputs.options }} --baseurl="${{ steps.pages.outputs.base_url }}/"
         # Summary
         if [ $? == 0 ]; then
           echo "Site built with Cecil ${{ inputs.version }}" >> $GITHUB_STEP_SUMMARY
