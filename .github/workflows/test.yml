@@ -11,7 +11,6 @@ concurrency:
 
 jobs:
   build:
-    name: Build static site
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,7 +19,7 @@ jobs:
         run: |
           mkdir -p pages
           cat > pages/index.md <<EOL
-          Test
+          This is a test page for the Cecil GitHub Action.
           EOL
       - name: Run Action
         uses: ./
