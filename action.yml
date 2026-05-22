@@ -8,7 +8,7 @@ inputs:
   version:
     description: "Cecil version (optional, last version by default)."
   install_themes:
-    description: "Use `no` to do not install theme(s) (optional, `yes` by default)."
+    description: "Set to `no` to skip installing theme(s) (optional, `yes` by default)."
     default: yes
 branding:
   icon: package
