@@ -35,12 +35,8 @@ on:
   push:
     branches: [main, master]
   workflow_dispatch:
-permissions:
-  contents: read
-  pages: write
-  id-token: write
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
 jobs:
   build:
@@ -52,6 +48,9 @@ jobs:
         uses: Cecilapp/Cecil-Action@v4
   deploy:
     needs: build
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
