@@ -11,9 +11,9 @@ This GitHub Action build a [_Cecil_](https://cecil.app) site and upload a GitHub
   uses: Cecilapp/Cecil-Action@v4
   # optional
   with:
-    version: 8.0.0       # default: latest version
-    options: -v --config=config.yml # default: "-v" (verbose)
-    install_themes: yes  # default: "yes"
+    version: 8.0.0                   # default: latest version
+    options: -v --config=config.yml  # default: "-v" (verbose)
+    install_themes: yes              # default: "yes"
 ```
 
 ### Workflow example
@@ -35,16 +35,13 @@ on:
   push:
     branches: [main, master]
   workflow_dispatch:
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
   group: "pages"
   cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -53,7 +50,6 @@ jobs:
         uses: actions/checkout@v6
       - name: Build site
         uses: Cecilapp/Cecil-Action@v4
-
   deploy:
     needs: build
     environment:
