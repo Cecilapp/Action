@@ -2,8 +2,12 @@ name: test
 
 on:
   push:
-    branches: [master]
+    branches: [main, master]
   workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -18,15 +22,21 @@ jobs:
           cat > pages/index.md <<EOL
           Test
           EOL
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: pre-installed
-          extensions: mbstring, fileinfo, gd, imagick, intl, gettext, :redis
       - name: Run Action
         uses: ./
         with:
-          version: '8.93.1'
-          config: 'config.yml'
-          args: '-vv'
-          install_themes: 'yes'
+          version: '8.94.3'
+          options: '-vv'
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
