@@ -44,7 +44,7 @@ runs:
     - name: Installing theme(s)
       shell: bash
       run: |
-        if [[ -f "composer.json" && ( "${{ inputs.install_themes }}" = 'yes' || "${{ inputs.install_themes }}" = 'true' ) ]]; then
+        if [[ -f "composer.json" && ( "${{ inputs.install_themes }}" = "yes" || "${{ inputs.install_themes }}" = "true" ) ]]; then
           echo "Installing theme(s)..."
           composer install --prefer-dist --no-dev --no-progress --no-interaction --quiet
         fi
