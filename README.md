@@ -12,8 +12,8 @@ This GitHub Action builds a [_Cecil_](https://cecil.app) site and uploads a GitH
   # optional
   with:
     version: 8.0.0                   # default: latest version
-    options: -v --config=config.yml  # default: "-v" (verbose)
     install_themes: "yes"            # default: "yes"
+    options: -v --config=config.yml  # default: "-v" (verbose)
 ```
 
 ### Workflow example
@@ -25,9 +25,9 @@ The following workflow:
 3. setup PHP
 4. downloads Cecil
 5. installs theme(s)
-6. runs Cecil to build the site
-7. upload artifact
-8. deploys `_site` to GitHub Pages
+6. runs Cecil build
+7. upload pages artifact
+8. deploys to GitHub Pages
 
 ```yaml
 name: Build and deploy to GitHub Pages
