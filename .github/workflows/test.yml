@@ -1,14 +1,11 @@
 name: test
-
 on:
   push:
     branches: [main, master]
   workflow_dispatch:
-
 concurrency:
   group: pages
   cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
