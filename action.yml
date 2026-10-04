@@ -2,6 +2,9 @@ name: "Cecil Action"
 description: "Build a Cecil static site."
 author: "Arnaud Ligny"
 inputs:
+  path:
+    description: "Path to the site source directory, relative to the repository root (optional, `.` by default)."
+    default: "."
   version:
     description: "Cecil version (optional, last version by default)."
   install_themes:
@@ -21,6 +24,20 @@ runs:
       with:
         php-version: pre-installed
         extensions: mbstring, fileinfo, gd, imagick, intl, gettext, :redis
+    - name: Validate site path
+      id: path
+      shell: bash
+      env:
+        SITE_PATH: ${{ inputs.path }}
+      run: |
+        path="${SITE_PATH:-.}"
+        path="${path%/}"
+        path="${path:-.}"
+        if [[ ! -d "$path" ]]; then
+          echo "Site path not found: '$path'" >&2
+          exit 1
+        fi
+        echo "path=$path" >> "$GITHUB_OUTPUT"
     - name: Validate Cecil version
       shell: bash
       run: |
@@ -43,6 +60,7 @@ runs:
         fi
     - name: Installing theme(s)
       shell: bash
+      working-directory: ${{ steps.path.outputs.path }}
       run: |
         if [[ -f "composer.json" && ( "${{ inputs.install_themes }}" = "yes" || "${{ inputs.install_themes }}" = "true" ) ]]; then
           echo "Installing theme(s)..."
@@ -54,7 +72,7 @@ runs:
     - name: Building site with Cecil
       shell: bash
       run: |
-        php cecil.phar build ${{ inputs.options }} --baseurl="${{ steps.pages.outputs.base_url }}/"
+        php cecil.phar build "${{ steps.path.outputs.path }}" ${{ inputs.options }} --baseurl="${{ steps.pages.outputs.base_url }}/"
         # Summary
         if [ $? == 0 ]; then
           echo "Site built with Cecil ${{ inputs.version }}" >> $GITHUB_STEP_SUMMARY
@@ -74,8 +92,12 @@ runs:
         elif [[ "$options" =~ (^|[[:space:]])-o([^[:space:]]+) ]]; then
           output_dir="${BASH_REMATCH[2]}"
         fi
+        # output directory is relative to the site path
+        if [[ "$output_dir" != /* ]]; then
+          output_dir="${{ steps.path.outputs.path }}/$output_dir"
+        fi
         echo "output_dir=$output_dir" >> "$GITHUB_OUTPUT"
     - name: Upload GitHub Pages artifact
       uses: actions/upload-pages-artifact@v5
       with:
-        path: ./${{ steps.output.outputs.output_dir }}
+        path: ${{ steps.output.outputs.output_dir }}

@@ -11,6 +11,7 @@ This GitHub Action builds a [_Cecil_](https://cecil.app) site and uploads a GitH
   uses: Cecilapp/Cecil-Action@v4
   # optional
   with:
+    path: docs                       # default: "." (repository root)
     version: 8.0.0                   # default: latest version
     install_themes: "yes"            # default: "yes"
     options: -v --config=config.yml  # default: "-v" (verbose)
