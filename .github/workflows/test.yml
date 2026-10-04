@@ -21,7 +21,6 @@ jobs:
       - name: Run Action
         uses: ./
         with:
-          version: '8.94.3'
           options: '-vv'
   deploy:
     needs: build
