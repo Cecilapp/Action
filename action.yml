@@ -7,97 +7,176 @@ inputs:
     default: "."
   version:
     description: "Cecil version (optional, last version by default)."
+  php_version:
+    description: "PHP version (optional, `8.3` by default)."
+    default: "8.3"
   install_themes:
     description: "Set to `no` to skip installing theme(s) (optional, `yes` by default)."
     default: "yes"
   options:
     description: "Cecil options (optional, `-v` by default)."
     default: -v
+  pages:
+    description: "Set to `false` to skip GitHub Pages configuration and artifact upload (optional, `true` by default)."
+    default: "true"
+  cache:
+    description: "Set to `false` to disable Cecil and Composer cache (optional, `true` by default)."
+    default: "true"
+outputs:
+  output_dir:
+    description: "Path to the generated site directory."
+    value: ${{ steps.build.outputs.output_dir }}
+  cecil_version:
+    description: "Version of Cecil used to build the site."
+    value: ${{ steps.download.outputs.version }}
 branding:
   icon: package
   color: white
 runs:
   using: composite
   steps:
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: pre-installed
-        extensions: mbstring, fileinfo, gd, imagick, intl, gettext, :redis
-    - name: Validate site path
-      id: path
+    - name: Validate inputs
+      id: inputs
       shell: bash
       env:
         SITE_PATH: ${{ inputs.path }}
+        VERSION: ${{ inputs.version }}
+        INSTALL_THEMES: ${{ inputs.install_themes }}
+        PAGES: ${{ inputs.pages }}
+        CACHE: ${{ inputs.cache }}
       run: |
         path="${SITE_PATH:-.}"
         path="${path%/}"
         path="${path:-.}"
         if [[ ! -d "$path" ]]; then
-          echo "Site path not found: '$path'" >&2
+          echo "::error::Site path not found: '$path'"
           exit 1
         fi
         echo "path=$path" >> "$GITHUB_OUTPUT"
-    - name: Validate Cecil version
-      shell: bash
-      run: |
-        version="${{ inputs.version }}"
-        if [[ -z "$version" ]]; then
+        if [[ -z "$VERSION" ]]; then
           echo "No Cecil version provided; using latest release."
-        elif [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([\-+].*)?$ ]]; then
-          echo "Invalid Cecil version: '$version' (expected e.g. 8.76.3)" >&2
+        elif [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([\-+][0-9A-Za-z.\-]+)?$ ]]; then
+          echo "::error::Invalid Cecil version: '$VERSION' (expected e.g. 9.25.0)"
           exit 1
         fi
+        # normalizes boolean inputs
+        bool() { [[ "$(echo "$1" | tr '[:upper:]' '[:lower:]')" =~ ^(yes|true|1|on)$ ]] && echo true || echo false; }
+        echo "install_themes=$(bool "$INSTALL_THEMES")" >> "$GITHUB_OUTPUT"
+        echo "pages=$(bool "$PAGES")" >> "$GITHUB_OUTPUT"
+        echo "cache=$(bool "$CACHE")" >> "$GITHUB_OUTPUT"
+        if [[ -f "$path/composer.json" ]]; then
+          echo "composer=true" >> "$GITHUB_OUTPUT"
+        fi
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ inputs.php_version }}
+        extensions: mbstring, fileinfo, gd, imagick, intl, gettext, :redis
+        tools: composer
     - name: Downloading Cecil
+      id: download
       shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
       run: |
-        if [[ -z "${{ inputs.version }}" ]]; then
+        phar="$RUNNER_TEMP/cecil.phar"
+        if [[ -z "$VERSION" ]]; then
           echo "Downloading latest Cecil..."
-          curl -sSOL https://cecil.app/cecil.phar
+          curl -fsSL -o "$phar" https://cecil.app/cecil.phar
+          sha1=$(curl -fsSL https://cecil.app/cecil.phar.sha1 || true)
         else
-          echo "Downloading Cecil ${{ inputs.version }}..."
-          curl -sSOL https://cecil.app/download/${{ inputs.version }}/cecil.phar
+          echo "Downloading Cecil $VERSION..."
+          curl -fsSL -o "$phar" "https://github.com/Cecilapp/Cecil/releases/download/$VERSION/cecil.phar"
+          sha1=$(curl -fsSL "https://cecil.app/download/$VERSION/cecil.phar.sha1" || true)
         fi
-    - name: Installing theme(s)
+        # checksum is not published for all versions
+        sha1=$(echo "$sha1" | grep -oE '^[0-9a-f]{40}' || true)
+        if [[ -n "$sha1" ]]; then
+          actual=$( (sha1sum < "$phar" 2>/dev/null || shasum -a 1 < "$phar") | cut -d' ' -f1)
+          if [[ "$actual" != "$sha1" ]]; then
+            echo "::error::Checksum mismatch for cecil.phar (expected $sha1, got $actual)"
+            exit 1
+          fi
+          echo "Checksum verified."
+        else
+          echo "::warning::No checksum available for this Cecil version; skipping verification."
+        fi
+        version=$(php "$phar" --version --no-ansi | grep -oE '[0-9]+\.[0-9]+\.[0-9]+[^ ]*' | head -1)
+        echo "Cecil $version"
+        echo "phar=$phar" >> "$GITHUB_OUTPUT"
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+    - name: Get Composer cache directory
+      id: composer-cache
+      if: steps.inputs.outputs.composer == 'true' && steps.inputs.outputs.install_themes == 'true' && steps.inputs.outputs.cache == 'true'
       shell: bash
-      working-directory: ${{ steps.path.outputs.path }}
+      run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+    - name: Cache Composer
+      if: steps.composer-cache.outputs.dir != ''
+      uses: actions/cache@v6
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: cecil-composer-${{ runner.os }}-${{ hashFiles(format('{0}/composer.lock', steps.inputs.outputs.path), format('{0}/composer.json', steps.inputs.outputs.path)) }}
+        restore-keys: cecil-composer-${{ runner.os }}-
+    - name: Installing theme(s)
+      if: steps.inputs.outputs.composer == 'true' && steps.inputs.outputs.install_themes == 'true'
+      shell: bash
+      working-directory: ${{ steps.inputs.outputs.path }}
       run: |
-        if [[ -f "composer.json" && ( "${{ inputs.install_themes }}" = "yes" || "${{ inputs.install_themes }}" = "true" ) ]]; then
-          echo "Installing theme(s)..."
-          composer install --prefer-dist --no-dev --no-progress --no-interaction --quiet
-        fi
+        echo "Installing theme(s)..."
+        composer install --prefer-dist --no-dev --no-progress --no-interaction
+    - name: Cache Cecil
+      if: steps.inputs.outputs.cache == 'true'
+      uses: actions/cache@v6
+      with:
+        path: ${{ steps.inputs.outputs.path }}/.cache
+        key: cecil-cache-${{ runner.os }}-${{ steps.download.outputs.version }}-${{ github.sha }}
+        restore-keys: cecil-cache-${{ runner.os }}-${{ steps.download.outputs.version }}-
     - name: Setup GitHub Pages
       id: pages
+      if: steps.inputs.outputs.pages == 'true'
       uses: actions/configure-pages@v6
     - name: Building site with Cecil
+      id: build
       shell: bash
+      env:
+        PHAR: ${{ steps.download.outputs.phar }}
+        SITE_PATH: ${{ steps.inputs.outputs.path }}
+        OPTIONS: ${{ inputs.options }}
+        BASE_URL: ${{ steps.pages.outputs.base_url }}
+        VERSION: ${{ steps.download.outputs.version }}
       run: |
-        php cecil.phar build "${{ steps.path.outputs.path }}" ${{ inputs.options }} --baseurl="${{ steps.pages.outputs.base_url }}/"
-        # Summary
-        if [ $? == 0 ]; then
-          echo "Site built with Cecil ${{ inputs.version }}" >> $GITHUB_STEP_SUMMARY
+        # splits options like a shell would (quotes are honored), without evaluating them
+        opts=()
+        if [[ -n "$OPTIONS" ]]; then
+          while IFS= read -r opt; do opts+=("$opt"); done < <(xargs -n1 printf '%s\n' <<< "$OPTIONS")
         fi
-    - name: Resolve output directory
-      id: output
-      shell: bash
-      run: |
-        options='${{ inputs.options }}'
         output_dir="_site"
-        if [[ "$options" =~ (^|[[:space:]])--output=([^[:space:]]+) ]]; then
-          output_dir="${BASH_REMATCH[2]}"
-        elif [[ "$options" =~ (^|[[:space:]])--output[[:space:]]+([^[:space:]]+) ]]; then
-          output_dir="${BASH_REMATCH[2]}"
-        elif [[ "$options" =~ (^|[[:space:]])-o[[:space:]]+([^[:space:]]+) ]]; then
-          output_dir="${BASH_REMATCH[2]}"
-        elif [[ "$options" =~ (^|[[:space:]])-o([^[:space:]]+) ]]; then
-          output_dir="${BASH_REMATCH[2]}"
+        has_baseurl=false
+        for ((i = 0; i < ${#opts[@]}; i++)); do
+          case "${opts[i]}" in
+            --output=*) output_dir="${opts[i]#--output=}" ;;
+            --output|-o) output_dir="${opts[i+1]}" ;;
+            -o*) output_dir="${opts[i]#-o}" ;;
+            --baseurl|--baseurl=*|-u|-u*) has_baseurl=true ;;
+          esac
+        done
+        # uses the GitHub Pages base URL, unless provided by options
+        if [[ -n "$BASE_URL" && "$has_baseurl" == false ]]; then
+          opts+=("--baseurl=${BASE_URL%/}/")
         fi
+        php "$PHAR" build "$SITE_PATH" "${opts[@]}"
         # output directory is relative to the site path
         if [[ "$output_dir" != /* ]]; then
-          output_dir="${{ steps.path.outputs.path }}/$output_dir"
+          output_dir="$SITE_PATH/$output_dir"
+        fi
+        if [[ ! -d "$output_dir" ]]; then
+          echo "::error::Output directory not found: '$output_dir' (if it is set in the configuration file, also set it with the '--output' option)"
+          exit 1
         fi
         echo "output_dir=$output_dir" >> "$GITHUB_OUTPUT"
+        echo "Site built with Cecil $VERSION in \`$output_dir\`." >> "$GITHUB_STEP_SUMMARY"
     - name: Upload GitHub Pages artifact
+      if: steps.inputs.outputs.pages == 'true'
       uses: actions/upload-pages-artifact@v5
       with:
-        path: ${{ steps.output.outputs.output_dir }}
+        path: ${{ steps.build.outputs.output_dir }}
