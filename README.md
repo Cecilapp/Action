@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Build site
         uses: Cecilapp/Action@v4
   deploy:
@@ -87,6 +87,16 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v5
 ```
+
+> [!TIP]
+> The Action must be preceded by `actions/checkout`. If your theme is a Git submodule (e.g. in `themes/<name>`), fetch it with `submodules: true`:
+>
+> ```yaml
+> - name: Checkout source
+>   uses: actions/checkout@v7
+>   with:
+>     submodules: true
+> ```
 
 ### Without GitHub Pages
 
