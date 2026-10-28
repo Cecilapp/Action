@@ -8,14 +8,39 @@ This GitHub Action builds a [_Cecil_](https://cecil.app) site and uploads a GitH
 
 ```yaml
 - name: Build site
-  uses: Cecilapp/Cecil-Action@v4
+  uses: Cecilapp/Action@v4
   # optional
   with:
     path: docs                       # default: "." (repository root)
-    version: 8.0.0                   # default: latest version
+    version: 9.25.0                  # default: latest version
+    php_version: "8.4"               # default: "8.3"
     install_themes: "yes"            # default: "yes"
     options: -v --config=config.yml  # default: "-v" (verbose)
+    pages: "true"                    # default: "true"
+    cache: "true"                    # default: "true"
 ```
+
+### Inputs
+
+| Name             | Description                                                                                   | Default  |
+| ---------------- | --------------------------------------------------------------------------------------------- | -------- |
+| `path`           | Path to the site source directory, relative to the repository root.                           | `.`      |
+| `version`        | Cecil version (e.g. `9.25.0`).                                                                | latest   |
+| `php_version`    | PHP version (Cecil requires PHP 8.3+ since version 9).                                        | `8.3`    |
+| `install_themes` | Set to `no` to skip installing theme(s) with Composer (when a `composer.json` file exists).   | `yes`    |
+| `options`        | Cecil `build` command options. `--baseurl` is set to the GitHub Pages URL unless provided.    | `-v`     |
+| `pages`          | Set to `false` to skip GitHub Pages setup and artifact upload (e.g. to deploy elsewhere).     | `true`   |
+| `cache`          | Set to `false` to disable Cecil (`.cache`) and Composer cache.                                | `true`   |
+
+> [!NOTE]
+> If the output directory is changed in the configuration file, also set it with the `--output` option so the Action can find it.
+
+### Outputs
+
+| Name            | Description                              |
+| --------------- | ---------------------------------------- |
+| `output_dir`    | Path to the generated site directory.    |
+| `cecil_version` | Version of Cecil used to build the site. |
 
 ### Workflow example
 
@@ -26,9 +51,10 @@ The following workflow:
 3. setup PHP
 4. downloads Cecil
 5. installs theme(s)
-6. runs Cecil build
-7. upload pages artifact
-8. deploys to GitHub Pages
+6. configures GitHub Pages
+7. runs Cecil build
+8. upload pages artifact
+9. deploys to GitHub Pages
 
 ```yaml
 name: Build and deploy to GitHub Pages
@@ -46,7 +72,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v6
       - name: Build site
-        uses: Cecilapp/Cecil-Action@v4
+        uses: Cecilapp/Action@v4
   deploy:
     needs: build
     permissions:
@@ -60,6 +86,19 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+```
+
+### Without GitHub Pages
+
+```yaml
+- name: Build site
+  id: cecil
+  uses: Cecilapp/Action@v4
+  with:
+    pages: false
+    options: -v --baseurl=https://example.com/
+- name: Deploy
+  run: ./deploy.sh "${{ steps.cecil.outputs.output_dir }}"
 ```
 
 ## License

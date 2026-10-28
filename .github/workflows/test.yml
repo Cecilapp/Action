@@ -2,12 +2,62 @@ name: test
 on:
   push:
     branches: [main, master]
+  pull_request:
   workflow_dispatch:
+permissions:
+  contents: read
 concurrency:
-  group: pages
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+          - os: ubuntu-latest
+            path: docs
+            version: 9.25.0
+            options: -v --output=public
+          - os: macos-latest
+          - os: windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Create a dummy page
+        shell: bash
+        run: |
+          mkdir -p "${{ matrix.path || '.' }}/pages"
+          cat > "${{ matrix.path || '.' }}/pages/index.md" <<EOL
+          This is a test page for the Cecil GitHub Action.
+          EOL
+      - name: Run Action
+        id: cecil
+        uses: ./
+        with:
+          path: ${{ matrix.path || '.' }}
+          version: ${{ matrix.version }}
+          options: ${{ matrix.options || '-v' }}
+          pages: false
+      - name: Check output
+        shell: bash
+        env:
+          OUTPUT_DIR: ${{ steps.cecil.outputs.output_dir }}
+          CECIL_VERSION: ${{ steps.cecil.outputs.cecil_version }}
+          EXPECTED_VERSION: ${{ matrix.version }}
+        run: |
+          echo "Cecil $CECIL_VERSION, output: $OUTPUT_DIR"
+          test -f "$OUTPUT_DIR/index.html"
+          if [[ -n "$EXPECTED_VERSION" ]]; then
+            test "$CECIL_VERSION" = "$EXPECTED_VERSION"
+          fi
   build:
+    if: github.event_name != 'pull_request'
+    permissions:
+      contents: read
+      pages: read
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
